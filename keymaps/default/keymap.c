@@ -113,7 +113,7 @@ TD(TD_TAB_TCL),KC_GRV,KC_AT, KC_HASH,    KC_DLR,  KC_PERC,                      
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_SLEP,
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       XXXXXXX, RGB_VAD, RGB_VAI, XXXXXXX, RGB_SPI, RGB_SPD,
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       RGB_MOD, RGB_HUI, RGB_SAI, XXXXXXX, RGB_HUD, RGB_SAD,
-  XXXXXXX, XXXXXXX, XXXXXXX, RGB_M_SW,RGB_M_R, RGB_M_B, XXXXXXX,     XXXXXXX, XXXXXXX, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX, XXXXXXX,
+  XXXXXXX, XXXXXXX, XXXXXXX, RGB_M_SW,RGB_M_X, RGB_M_B, XXXXXXX,     XXXXXXX, XXXXXXX, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX, XXXXXXX,
                     _______, _______, _______, _______, _______,     _______,  _______, _______, _______, _______
   ),
 
@@ -122,12 +122,15 @@ TD(TD_TAB_TCL),KC_GRV,KC_AT, KC_HASH,    KC_DLR,  KC_PERC,                      
 
 #ifdef RGBLIGHT_ENABLE
 
-void default_rgb_layer(void){
-
-
+void keyboard_post_init_user(void) {
+    rgb_matrix_enable();
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_PIXEL_RAIN);
 }
 
-#endif
+void default_rgb_layer(void){
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_PIXEL_RAIN);
+    //rgb_matrix_sethsv_noeeprom(HSV_OFF);
+}
 
 //
 // Suspend RGB feature
@@ -140,7 +143,7 @@ void suspend_wakeup_init_kb(void)
 {
     rgb_matrix_set_suspend_state(false);
 }
-
+#endif
 
 //
 // Handle layer
@@ -148,22 +151,28 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #ifdef RGBLIGHT_ENABLE
     //
     // Change RGB colors from layer
+
     switch (get_highest_layer(state)) {
         case 0:
             default_rgb_layer();
             break;
         case _LOWER:
-            rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
-            rgblight_sethsv_noeeprom(HSV_TEAL);
+           // rgb_matrix_disable_noeeprom();
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(HSV_TEAL);
             break;
         case _RAISE:
-            rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
-            rgblight_sethsv_noeeprom(HSV_GREEN);
+            //rgb_matrix_disable_noeeprom();
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(HSV_YELLOW);
+
+
             break;
         case _ADJUST:
-             rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
-            rgblight_sethsv_noeeprom(RGB_WHITE);
-        break;
+            //rgb_matrix_disable_noeeprom();
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(HSV_TURQUOISE);
+            break;
 
         }
 
@@ -248,12 +257,4 @@ tap_dance_action_t tap_dance_actions[] = {
 
 
 
-// RBG Render
-#ifdef RGBLIGHT_ENABLE
-void keyboard_post_init_user(void) {
-  rgblight_enable_noeeprom(); // Enables RGB, without saving settings
-  default_rgb_layer();
-  // rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
-}
 
-#endif
