@@ -118,13 +118,13 @@
     },
     "rgblight": {
         "led_count": 70,
-        "max_brightness": 128,
+        "max_brightness": 200,
         "split": true,
         "split_count": [35, 35]
     },
     "rgb_matrix": {
         "driver": "ws2812",
-        "max_brightness": 128,
+        "max_brightness": 200,
         "split_count": [35, 35],
         "layout": [
             {"x": 67, "y": 18, "flags": 2},

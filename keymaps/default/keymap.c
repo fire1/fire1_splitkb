@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H
 
 
+
 // Keyboard layers
 enum layer_number {
   _QWERTY = 0,
@@ -42,10 +43,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 //   TD(TD_ESC_GRV) HD_SFT_LAN
  [_QWERTY] = LAYOUT(
-        KC_ESC,    KC_1,    KC_2,   KC_3,    KC_4,     KC_5,                          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,      KC_BSPC,
-        KC_TAB,    KC_Q,    KC_W,   KC_E,    KC_R,     KC_T,                          KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_MINS,
-TD(TD_SFT_LAN),    KC_A,    KC_S,   KC_D,    KC_F,     KC_G,                          KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,   MT(MOD_RSFT,  KC_QUOT),
-        KC_LCTL,  KC_Z,    KC_X,   KC_C,    KC_V,     KC_B,   KC_F5,           KC_F6, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,   TD(TD_SFT_CPS),
+        KC_ESC,    KC_1,    KC_2,   KC_3,    KC_4,     KC_5,                           KC_6,    KC_7,    KC_8,    KC_9,    KC_0,      KC_BSPC,
+        KC_TAB,    KC_Q,    KC_W,   KC_E,    KC_R,     KC_T,                           KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_MINS,
+TD(TD_SFT_LAN),    KC_A,    KC_S,   KC_D,    KC_F,     KC_G,                           KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,   MT(MOD_RSFT,  KC_QUOT),
+        KC_LCTL,  KC_Z,    KC_X,   KC_C,    KC_V,     KC_B,  KC_MUTE,           KC_F6, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,   TD(TD_SFT_CPS),
                                 KC_LGUI, KC_LGUI, KC_LALT,MO(_LOWER), KC_SPC,   KC_ENT, MO(_RAISE),  KC_BSPC, KC_LGUI,   MT(MOD_RCTL, KC_APP)
 
 ),
@@ -120,6 +121,32 @@ TD(TD_TAB_TCL),KC_GRV,KC_AT, KC_HASH,    KC_DLR,  KC_PERC,                      
 
 };
 
+#ifdef ENCODER_ENABLE
+bool encoder_update_kb(uint8_t index, bool clockwise) {
+    if (!encoder_update_user(index, clockwise)) {
+        return false;
+    }
+    // 0 is left-half encoder,
+    // 1 is right-half encoder
+    if (index == 0) {
+        // Volume control
+        if (clockwise) {
+            tap_code(KC_VOLU);
+        } else {
+            tap_code(KC_VOLD);
+        }
+    } else if (index == 1) {
+        // Page up/Page down
+        if (clockwise) {
+            tap_code(KC_PGDN);
+        } else {
+            tap_code(KC_PGUP);
+        }
+    }
+    return true;
+}
+#endif
+
 #ifdef RGBLIGHT_ENABLE
 
 void keyboard_post_init_user(void) {
@@ -129,9 +156,18 @@ void keyboard_post_init_user(void) {
 
 void default_rgb_layer(void){
     rgb_matrix_mode_noeeprom(RGB_MATRIX_PIXEL_RAIN);
-    //rgb_matrix_sethsv_noeeprom(HSV_OFF);
 }
-
+/**
+ * @brief Change RGB color
+ *
+ * @param h
+ * @param s
+ * @param v
+ */
+void change_rgb_layer(uint8_t h,uint8_t s,uint8_t v){
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    rgb_matrix_sethsv_noeeprom(h, s, v);
+}
 //
 // Suspend RGB feature
 void suspend_power_down_kb(void)
@@ -145,36 +181,30 @@ void suspend_wakeup_init_kb(void)
 }
 #endif
 
+
+
 //
 // Handle layer
 layer_state_t layer_state_set_user(layer_state_t state) {
 #ifdef RGBLIGHT_ENABLE
-    //
-    // Change RGB colors from layer
 
     switch (get_highest_layer(state)) {
         case 0:
             default_rgb_layer();
             break;
+
         case _LOWER:
-           // rgb_matrix_disable_noeeprom();
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(HSV_TEAL);
+            change_rgb_layer(HSV_TEAL);
             break;
+
         case _RAISE:
-            //rgb_matrix_disable_noeeprom();
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(HSV_YELLOW);
-
-
+            change_rgb_layer(HSV_YELLOW);
             break;
+
         case _ADJUST:
-            //rgb_matrix_disable_noeeprom();
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(HSV_TURQUOISE);
+            change_rgb_layer(HSV_TURQUOISE);
             break;
-
-        }
+    }
 
 #endif
 
@@ -185,20 +215,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 //SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mk
-#ifdef OLED_ENABLE
 
-
-// When you add source files to SRC in rules.mk, you can use functions.
-const char *read_layer_state(void);
-const char *read_logo(void);
-//void set_keylog(uint16_t keycode, keyrecord_t *record);
-const char *read_keylog(void);
-const char *read_keylogs(void);
-
-void set_oled_keys(uint16_t keycode, keyrecord_t *record);
-
-
-#endif // OLED_ENABLE
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -255,6 +272,6 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_TAB_TCL]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL,dance_switch_tab_start, dance_switch_tab_finish),
 };
 
-
-
-
+#ifdef OLED_ENABLE
+#include "lib/oled.c"
+#endif
