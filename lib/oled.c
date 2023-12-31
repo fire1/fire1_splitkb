@@ -24,14 +24,14 @@ void render_oled_master(led_t led_usb_state) {
 
         case L_BASE:
             if (led_usb_state.caps_lock) {
-                oled_write(("CPSLK"), true);
+                oled_write(PSTR("CPSLK"), true);
             } else {
-                oled_write(("QWRTY"), false);
+                oled_write(PSTR("QWRTY"), false);
             }
             break;
         case L_ADJUST:
         case L_ADJUST_TRI:
-            oled_write(("ADJST"), true);
+            oled_write(PSTR("ADJST"), true);
             break;
 
         case L_LOWER:
@@ -40,7 +40,7 @@ void render_oled_master(led_t led_usb_state) {
             break;
 
         default:
-            oled_write(("UNDEF"), false);
+            oled_write(PSTR("UNDEF"), false);
             break;
     }
 
@@ -48,9 +48,9 @@ void render_oled_master(led_t led_usb_state) {
     oled_write("-----", false);
 
     oled_set_cursor(0, 7);
-    oled_write(("LOWER"), is_layer_eql(L_LOWER));
+    oled_write(PSTR("LOWER"), is_layer_eql(L_LOWER));
     oled_set_cursor(0, 8);
-    oled_write(("RAISE"), is_layer_eql(L_RAISE));
+    oled_write(PSTR("RAISE"), is_layer_eql(L_RAISE));
 
     /* Print current key */
     oled_set_cursor(0, 11);
