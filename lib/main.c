@@ -185,8 +185,6 @@ void setScreenKeys(uint16_t keycode, keyrecord_t *record) {
  * @return false
  */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    setScreenKeys(keycode, record);
-
     if (record->event.pressed) {
         switch (keycode) {
             //
@@ -194,7 +192,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case KC_ESC:
             case KC_1:
             case KC_Q:
-            case KC_TAB:
                 keymap[0] = 0xC6;
                 break;
 
@@ -225,14 +222,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case KC_G:
                 keymap[1] = 0xCB;
                 break;
+
             case KC_Z:
             case KC_X:
                 keymap[0] = 0x8C;
                 break;
+
             case KC_C:
             case KC_V:
                 keymap[0] = 0xAC;
                 break;
+
             case KC_B:
                 keymap[1] = 0xAD;
                 break;
@@ -242,34 +242,42 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case KC_N:
                 keymap[2] = 0x8C;
                 break;
+
             case KC_H:
                 keymap[2] = 0xAA;
                 break;
+
             case KC_6:
             case KC_Y:
                 keymap[2] = 0xC6;
                 break;
+
             case KC_7:
             case KC_8:
             case KC_U:
             case KC_I:
                 keymap[2] = 0x8A;
                 break;
+
             case KC_J:
             case KC_K:
                 keymap[2] = 0xCA;
                 break;
+
             case KC_DOT:
             case KC_COMM:
                 keymap[3] = 0x8D;
                 break;
+
             case KC_SLSH:
                 keymap[3] = 0xAD;
                 break;
+
             case KC_L:
             case KC_SCLN:
                 keymap[3] = 0xCB;
                 break;
+
             case KC_O:
             case KC_P:
             case KC_9:
@@ -281,5 +289,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 break;
         }
     }
+
+    setScreenKeys(keycode, record);
     return true; // We didn't handle other keypresses
 }
