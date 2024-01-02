@@ -18,9 +18,8 @@
 
 // NOTE: This file is a copy of `crkbd/soundmonster/glcdfont.c`
 
-// Corne 8x6 font with QMK Firmware Logo
-// Online editor: https://helixfonteditor.netlify.com/
-// See also: https://github.com/soundmonster/glcdfont_converter
+// Custom font 8x6 font
+// Source tool: https://joric.github.io/qle/
 static const unsigned char PROGMEM font[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x3E, 0x5B, 0x4F, 0x5B, 0x3E, 0x00,
