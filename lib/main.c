@@ -140,7 +140,6 @@ void drawKeyboard(void) {
     oled_write(keylog, false);
 }
 
-
 void renderMaster(led_t ledUsbState) {
     drawLogo();
 
@@ -177,7 +176,14 @@ void setScreenKeys(uint16_t keycode, keyrecord_t *record) {
     keylog[1] = keylog[0];
     keylog[0] = name;
 }
-
+/**
+ * @brief OLED keyboard animation of the keypresses
+ *
+ * @param keycode
+ * @param record
+ * @return true
+ * @return false
+ */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     setScreenKeys(keycode, record);
 
