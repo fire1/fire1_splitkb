@@ -131,9 +131,9 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
     if (index == 0) {
         // Volume control
         if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
             tap_code(KC_VOLD);
+        } else {
+            tap_code(KC_VOLU);
         }
     } else if (index == 1) {
         // Page up/Page down
@@ -146,89 +146,6 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
     return true;
 }
 #endif
-
-#ifdef RGBLIGHT_ENABLE
-
-void keyboard_post_init_user(void) {
-    rgb_matrix_enable();
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_PIXEL_RAIN);
-}
-
-void default_rgb_layer(void){
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_PIXEL_RAIN);
-}
-/**
- * @brief Change RGB color
- *
- * @param h
- * @param s
- * @param v
- */
-void change_rgb_layer(uint8_t h,uint8_t s,uint8_t v){
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-    rgb_matrix_sethsv_noeeprom(h, s, v);
-}
-//
-// Suspend RGB feature
-void suspend_power_down_kb(void)
-{
-    rgb_matrix_set_suspend_state(true);
-}
-
-void suspend_wakeup_init_kb(void)
-{
-    rgb_matrix_set_suspend_state(false);
-}
-#endif
-
-
-
-//
-// Handle layer
-layer_state_t layer_state_set_user(layer_state_t state) {
-#ifdef RGBLIGHT_ENABLE
-
-    switch (get_highest_layer(state)) {
-        case 0:
-            default_rgb_layer();
-            break;
-
-        case _LOWER:
-            change_rgb_layer(HSV_TEAL);
-            break;
-
-        case _RAISE:
-            change_rgb_layer(HSV_YELLOW);
-            break;
-
-        case _ADJUST:
-            change_rgb_layer(HSV_TURQUOISE);
-            break;
-    }
-
-#endif
-
-#ifdef OLED_ENABLE
-  return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
-#endif
-
-}
-
-//SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mk
-
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-
-  }
-
-#ifdef OLED_ENABLE
-// todo later
- // set_oled_keys(keycode, record);
-#endif
-
-  return true; // We didn't handle other keypresses
-}
 
 //
 // Tap dance setup
@@ -272,6 +189,6 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_TAB_TCL]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL,dance_switch_tab_start, dance_switch_tab_finish),
 };
 
-#ifdef OLED_ENABLE
-#include "lib/oled.c"
-#endif
+
+#include "lib/main.c"
+
