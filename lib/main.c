@@ -21,9 +21,9 @@ static char       keylog[5]      = {' ', ' ', ' ', ' '};
 // Logo char definitions
 static const char PROGMEM qmk_logo[] = {0x80, 0x81, 0x82, 0x83, 0xFF, 0xA0, 0xA1, 0xA2, 0xA3, 0xFF, 0xC0, 0xC1, 0xC2, 0xC3};
 
-static const char PROGMEM win_logo[] = {0x97, 0x98, 0xFF, 0x00,  0xB7, 0xB8, '\n'};
+static const char PROGMEM win_logo[] = {0x97, 0x98, 0xFF, 0x20, 0x20, 0xB7, 0xB8, 0xFF, 0xFF};
 
-static const char PROGMEM mac_logo[] = {0x95, 0x96, 0xFF, 0xB5, 0xB6, 0xFF};
+static const char PROGMEM mac_logo[] = {0x95, 0x96, 0xFF, 0x20, 0x20, 0xB6, 0xFF, 0xFF, 0xFF};
 
 static const char PROGMEM kbr_full[] = {0x86, 0x87, 0x88, 0x89, 0xFF, 0xA6, 0xA7, 0xA8, 0xA9};
 
@@ -86,18 +86,22 @@ void drawLogo(void) {
             oled_set_cursor(2, 1);
             oled_write_P(win_logo, false);
         }
-        isNotBootRun = true;
+        oled_set_cursor(0, 3);
+        oled_write_P(PSTR("     "), false);
+        oled_set_cursor(0, 4);
+        oled_write_P(PSTR("     "), false);
     }
 
-    if (timer_elapsed(privateTimer) > 5000) {
+    if (!isNotBootRun && timer_elapsed(privateTimer) > 5000) {
+        isNotBootRun = true;
         oled_set_cursor(1, 1);
         oled_write_P(qmk_logo, false);
+        oled_set_cursor(0, 4);
+        oled_write_P(PSTR("     "), false);
     }
 }
 
 void handleLayers(led_t ledUsbState) {
-    oled_set_cursor(0, 4);
-    oled_write_P(PSTR("     "), false);
     oled_set_cursor(0, 5);
     switch (layer_state) {
         case L_BASE:
