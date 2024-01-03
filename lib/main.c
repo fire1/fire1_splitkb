@@ -28,7 +28,7 @@ static const char PROGMEM mac_logo[] = {0x95, 0x96, 0xFF, 0x20, 0x20, 0xB6, 0xFF
 static const char PROGMEM kbr_full[] = {0x86, 0x87, 0x88, 0x89, 0xFF, 0xA6, 0xA7, 0xA8, 0xA9};
 
 static char keymap[9] = {};
-
+#include "lib/ani.c"
 static uint8_t  keypressIndex = 0;
 static uint16_t privateTimer  = 0;
 static bool     isNotBootRun  = false;
@@ -97,7 +97,7 @@ void drawLogo(void) {
         oled_set_cursor(1, 1);
         oled_write_P(qmk_logo, false);
         oled_set_cursor(0, 4);
-        oled_write_P(PSTR("     "), false);
+        oled_write_P(PSTR("     "), false); //
     }
 }
 
@@ -197,7 +197,7 @@ void setScreenKeys(uint16_t keycode, keyrecord_t *record) {
  * @return true
  * @return false
  */
-#include "lib/ani.c"
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     setScreenKeys(keycode, record);
     animateKeymap(keycode, record);
