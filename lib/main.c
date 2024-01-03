@@ -21,16 +21,17 @@ static char       keylog[5]      = {' ', ' ', ' ', ' '};
 // Logo char definitions
 static const char PROGMEM qmk_logo[] = {0x80, 0x81, 0x82, 0x83, 0xFF, 0xA0, 0xA1, 0xA2, 0xA3, 0xFF, 0xC0, 0xC1, 0xC2, 0xC3};
 
-static const char PROGMEM win_logo[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xbc, 0xbc, 0xbe, 0xbe, 0x00, 0xbe, 0xbe, 0xbf, 0xbf, 0xbf, 0xbf, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x07, 0x0f, 0x0f, 0x00, 0x0f, 0x0f, 0x1f, 0x1f, 0x1f, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+static const char PROGMEM win_logo[] = {0x97, 0x98, 0xFF, 0x00,  0xB7, 0xB8, '\n'};
 
-static const char PROGMEM mac_logo[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0xf0, 0xf8, 0xf8, 0xf8, 0xf0, 0xf6, 0xfb, 0xfb, 0x38, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x07, 0x0f, 0x1f, 0x1f, 0x0f, 0x0f, 0x1f, 0x1f, 0x0f, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+static const char PROGMEM mac_logo[] = {0x95, 0x96, 0xFF, 0xB5, 0xB6, 0xFF};
 
 static const char PROGMEM kbr_full[] = {0x86, 0x87, 0x88, 0x89, 0xFF, 0xA6, 0xA7, 0xA8, 0xA9};
 
 static char keymap[9] = {};
 
-static uint16_t startupTimer = 0;
-static bool     isInitRun    = false;
+static uint8_t  keypressIndex = 0;
+static uint16_t privateTimer  = 0;
+static bool     isNotBootRun  = false;
 
 static bool is_layer_eql(uint16_t state) {
     if (layer_state == state) {
@@ -74,24 +75,29 @@ void suspend_wakeup_init_kb(void) {
  *
  */
 void drawLogo(void) {
-    if (!isInitRun && timer_elapsed(startupTimer) > 5000) {
+    if (timer_elapsed(privateTimer) < 5000) {
         //
         // Close init run
-        isInitRun = true;
 
-        oled_set_cursor(0, 0);
         if (keymap_config.swap_lctl_lgui) {
+            oled_set_cursor(2, 1);
             oled_write_P(mac_logo, false);
         } else {
+            oled_set_cursor(2, 1);
             oled_write_P(win_logo, false);
         }
-    } else {
+        isNotBootRun = true;
+    }
+
+    if (timer_elapsed(privateTimer) > 5000) {
         oled_set_cursor(1, 1);
         oled_write_P(qmk_logo, false);
     }
 }
 
 void handleLayers(led_t ledUsbState) {
+    oled_set_cursor(0, 4);
+    oled_write_P(PSTR("     "), false);
     oled_set_cursor(0, 5);
     switch (layer_state) {
         case L_BASE:
@@ -136,6 +142,9 @@ void drawKeyboard(void) {
     oled_set_cursor(KBR_POSITION);
     oled_write(keymap, false);
 
+    oled_set_cursor(0, 13);
+    oled_write_P(PSTR("     "), false);
+
     oled_set_cursor(1, 14);
     oled_write(keylog, false);
 }
@@ -151,8 +160,8 @@ void renderMaster(led_t ledUsbState) {
 //
 // Setup screen
 oled_rotation_t oled_init_kb(oled_rotation_t rotation) {
-    startupTimer = timer_read();
     memcpy_P(&keymap, kbr_full, sizeof(kbr_full));
+    privateTimer = timer_read();
     return OLED_ROTATION_270;
 }
 
@@ -184,112 +193,19 @@ void setScreenKeys(uint16_t keycode, keyrecord_t *record) {
  * @return true
  * @return false
  */
+#include "lib/ani.c"
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed && keycode < 60) {
-        switch (keycode) {
-            //
-            // Master side
-            case KC_ESC:
-            case KC_1:
-            case KC_Q:
-                keymap[0] = 0xC6;
-                break;
+    setScreenKeys(keycode, record);
+    animateKeymap(keycode, record);
 
-            case KC_2:
-            case KC_3:
-            case KC_W:
-            case KC_E:
-                keymap[0] = 0x8A;
-                break;
-
-            case KC_4:
-            case KC_5:
-            case KC_R:
-            case KC_T:
-                keymap[1] = 0xC9;
-                break;
-
-            case KC_A:
-            case KC_S:
-                keymap[0] = 0xAA;
-                break;
-
-            case KC_D:
-            case KC_F:
-                keymap[1] = 0xAB;
-                break;
-
-            case KC_G:
-                keymap[1] = 0xCB;
-                break;
-
-            case KC_Z:
-            case KC_X:
-                keymap[0] = 0x8C;
-                break;
-
-            case KC_C:
-            case KC_V:
-                keymap[0] = 0xAC;
-                break;
-
-            case KC_B:
-                keymap[1] = 0xAD;
-                break;
-
-                //
-                // Slave side
-            case KC_N:
-                keymap[2] = 0x8C;
-                break;
-
-            case KC_H:
-                keymap[2] = 0xAA;
-                break;
-
-            case KC_6:
-            case KC_Y:
-                keymap[2] = 0xC6;
-                break;
-
-            case KC_7:
-            case KC_8:
-            case KC_U:
-            case KC_I:
-                keymap[2] = 0x8A;
-                break;
-
-            case KC_J:
-            case KC_K:
-                keymap[2] = 0xCA;
-                break;
-
-            case KC_DOT:
-            case KC_COMM:
-                keymap[3] = 0x8D;
-                break;
-
-            case KC_SLSH:
-                keymap[3] = 0xAD;
-                break;
-
-            case KC_L:
-            case KC_SCLN:
-                keymap[3] = 0xCB;
-                break;
-
-            case KC_O:
-            case KC_P:
-            case KC_9:
-            case KC_0:
-                keymap[3] = 0x8B;
-                break;
-            default:
-                // For other keycodes, you might want to update the keymap accordingly
-                break;
-        }
+    //
+    // Reset keymap animation pressesdfkjiekjdfiekjdf
+    if (keypressIndex > 5) {
+        memcpy_P(&keymap, kbr_full, sizeof(kbr_full));
+        keypressIndex = 0;
     }
 
-    setScreenKeys(keycode, record);
+    keypressIndex++;
+
     return true; // We didn't handle other keypresses
 }
