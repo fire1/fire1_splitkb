@@ -31,7 +31,7 @@ static char keymap[9] = {};
 #include "lib/ani.c"
 static uint8_t  keypressIndex = 0;
 static uint16_t privateTimer  = 0;
-static bool     isNotBootRun  = false;
+//static bool     isNotBootRun  = false;
 
 static bool is_layer_eql(uint16_t state) {
     if (layer_state == state) {
@@ -92,8 +92,7 @@ void drawLogo(void) {
         oled_write_P(PSTR("     "), false);
     }
 
-    if (!isNotBootRun && timer_elapsed(privateTimer) > 5000) {
-        isNotBootRun = true;
+    if (timer_elapsed(privateTimer) > 5000) {
         oled_set_cursor(1, 1);
         oled_write_P(qmk_logo, false);
         oled_set_cursor(0, 4);
