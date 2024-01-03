@@ -127,8 +127,6 @@ void handleLayers(led_t ledUsbState) {
         default:
             oled_write_P(PSTR("ADJST"), true);
             change_rgb_layer(HSV_TURQUOISE);
-
-            // oled_write_P(PSTR("UNDEF"), false);
             break;
     }
 
