@@ -181,17 +181,34 @@ void dance_switch_tab_finish (tap_dance_state_t *state, void *user_data) {
     unregister_code(KC_TAB);
 
 }
-
-// Tab dance
+//
+// Tab dance colection
 tap_dance_action_t tap_dance_actions[] = {
     [TD_SFT_CPS]  = ACTION_TAP_DANCE_DOUBLE(KC_RSFT, KC_CAPS),
     [TD_SFT_LAN]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL,dance_switch_lan_start, dance_switch_lan_finish),
     [TD_TAB_TCL]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL,dance_switch_tab_start, dance_switch_tab_finish),
 };
 
+//
+// Handle layers properly
 layer_state_t layer_state_set_user(layer_state_t state) {
   return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
 }
+
+void suspend_power_down_user(void) {
+    oled_off();
+}
+
+// Suspend RGB matrix
+/* void suspend_power_down_kb(void)
+{
+    rgb_matrix_set_suspend_state(true);
+}
+
+void suspend_wakeup_init_kb(void)
+{
+    rgb_matrix_set_suspend_state(false);
+} */
 
 #include "lib/main.c"
 
