@@ -15,7 +15,9 @@
 
 #ifdef RGB_MATRIX_ENABLE
 #    define ENABLE_RGB_MATRIX_PIXEL_RAIN
-#    define RGB_MATRIX_KEYPRESSES // reacts to keypresses
+#    define RGB_MATRIX_KEYPRESSES          // reacts to keypresses
+#    define LED_DISABLE_WHEN_USB_SUSPENDED // turn off effects when suspended
+#    define LED_MATRIX_TIMEOUT 15000       // number of milliseconds to wait until led automatically turns off
 #endif
 /* disable debug print */
 // #define NO_DEBUG

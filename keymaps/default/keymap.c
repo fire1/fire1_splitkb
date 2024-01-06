@@ -200,7 +200,8 @@ void suspend_power_down_user(void) {
 }
 
 // Suspend RGB matrix
-/* void suspend_power_down_kb(void)
+/*
+void suspend_power_down_kb(void)
 {
     rgb_matrix_set_suspend_state(true);
 }
@@ -208,7 +209,7 @@ void suspend_power_down_user(void) {
 void suspend_wakeup_init_kb(void)
 {
     rgb_matrix_set_suspend_state(false);
-} */
-
+}
+*/
 #include "lib/main.c"
 

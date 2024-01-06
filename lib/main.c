@@ -31,7 +31,7 @@ static char keymap[9] = {};
 #include "lib/ani.c"
 static uint8_t  keypressIndex = 0;
 static uint16_t privateTimer  = 0;
-//static bool     isNotBootRun  = false;
+static bool     isInitDrawRun = false;
 
 static bool is_layer_eql(uint16_t state) {
     if (layer_state == state) {
@@ -70,34 +70,25 @@ void suspend_wakeup_init_kb(void) {
     rgb_matrix_set_suspend_state(false);
 }
 
-/**
- * @brief At boot display OS and swithc to QMK logo
- *
- */
+void drawBoot(void) {
+    if (keymap_config.swap_lctl_lgui) {
+        oled_set_cursor(2, 1);
+        oled_write_P(mac_logo, false);
+    } else {
+        oled_set_cursor(2, 1);
+        oled_write_P(win_logo, false);
+    }
+    oled_set_cursor(0, 3);
+    oled_write_P(PSTR("     "), false);
+    oled_set_cursor(0, 4);
+    oled_write_P(PSTR("     "), false);
+}
+
 void drawLogo(void) {
-    if (timer_elapsed(privateTimer) < 5000) {
-        //
-        // Close init run
-
-        if (keymap_config.swap_lctl_lgui) {
-            oled_set_cursor(2, 1);
-            oled_write_P(mac_logo, false);
-        } else {
-            oled_set_cursor(2, 1);
-            oled_write_P(win_logo, false);
-        }
-        oled_set_cursor(0, 3);
-        oled_write_P(PSTR("     "), false);
-        oled_set_cursor(0, 4);
-        oled_write_P(PSTR("     "), false);
-    }
-
-    if (timer_elapsed(privateTimer) > 5000) {
-        oled_set_cursor(1, 1);
-        oled_write_P(qmk_logo, false);
-        oled_set_cursor(0, 4);
-        oled_write_P(PSTR("     "), false); //
-    }
+    oled_set_cursor(1, 1);
+    oled_write_P(qmk_logo, false);
+    oled_set_cursor(0, 4);
+    oled_write_P(PSTR("     "), false); //
 }
 
 void handleLayers(led_t ledUsbState) {
@@ -151,7 +142,14 @@ void drawKeyboard(void) {
 }
 
 void renderMaster(led_t ledUsbState) {
-    drawLogo();
+    if (!isInitDrawRun && timer_elapsed(privateTimer) < 5000) {
+        drawBoot();
+    }
+
+    if (!isInitDrawRun && timer_elapsed(privateTimer) > 5000) {
+        drawLogo();
+        isInitDrawRun = true;
+    }
 
     handleLayers(ledUsbState);
 
