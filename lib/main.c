@@ -141,6 +141,11 @@ void drawKeyboard(void) {
     oled_write(keylog, false);
 }
 
+void resetKeymap(void) {
+    memcpy_P(&keymap, kbr_full, sizeof(kbr_full));
+    keypressIndex = 0;
+}
+
 void renderMaster(led_t ledUsbState) {
     if (!isInitDrawRun && timer_elapsed(privateTimer) < 5000) {
         drawBoot();
@@ -153,7 +158,9 @@ void renderMaster(led_t ledUsbState) {
 
     handleLayers(ledUsbState);
 
-    drawKeyboard();
+    if (keypressIndex > 0 && timer_elapsed(privateTimer) > 1200) resetKeymap();
+
+    if (keypressIndex > 0) drawKeyboard();
 }
 
 //
@@ -184,6 +191,7 @@ void setScreenKeys(uint16_t keycode, keyrecord_t *record) {
     keylog[1] = keylog[0];
     keylog[0] = name;
 }
+
 /**
  * @brief OLED keyboard animation of the keypresses
  *
@@ -192,19 +200,14 @@ void setScreenKeys(uint16_t keycode, keyrecord_t *record) {
  * @return true
  * @return false
  */
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     setScreenKeys(keycode, record);
-    animateKeymap(keycode, record);
-
+    setOledKeymap(keycode, record);
     //
-    // Reset keymap animation pressesdfkjiekjdfiekjdf
-    if (keypressIndex > 5) {
-        memcpy_P(&keymap, kbr_full, sizeof(kbr_full));
-        keypressIndex = 0;
-    }
+    // Reset keymap animation pressesd
+    if (keypressIndex > 5) resetKeymap();
+    if (isInitDrawRun) privateTimer = timer_read();
 
     keypressIndex++;
-
     return true; // We didn't handle other keypresses
 }

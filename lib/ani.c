@@ -15,7 +15,7 @@ static const char kpr_br2 = 0xAD;
  * @param keycode
  * @param record
  */
-void animateKeymap(uint16_t keycode, keyrecord_t *record) {
+void setOledKeymap(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed && keycode < 40) {
         switch (keycode) {
             //
