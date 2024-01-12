@@ -32,6 +32,7 @@ static char keymap[9] = {};
 static uint8_t  keypressIndex = 0;
 static uint16_t privateTimer  = 0;
 static bool     isInitDrawRun = false;
+static bool     isInitDrawKbd = false;
 
 static bool is_layer_eql(uint16_t state) {
     if (layer_state == state) {
@@ -160,7 +161,10 @@ void renderMaster(led_t ledUsbState) {
 
     if (keypressIndex > 0 && timer_elapsed(privateTimer) > 1200) resetKeymap();
 
-    if (keypressIndex > 0) drawKeyboard();
+    if (keypressIndex > 0 || !isInitDrawKbd) {
+        isInitDrawKbd = true;
+        drawKeyboard();
+    }
 }
 
 //
@@ -210,4 +214,53 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     keypressIndex++;
     return true; // We didn't handle other keypresses
+}
+
+//
+// Handle power states of the keybard
+//
+
+void suspend_power_down_user(void) {
+    oled_off();
+    rgb_matrix_set_suspend_state(true);
+    rgb_matrix_set_color_all(RGB_OFF);
+    // rgb_matrix_update_pwm_buffers();
+}
+
+void suspend_wakeup_init_user(void) {
+    rgb_matrix_set_suspend_state(false);
+    oled_on();
+    default_rgb_layer();
+    // rgb_matrix_update_pwm_buffers();
+}
+
+bool shutdown_kb(bool jump_to_bootloader) {
+    if (!shutdown_user(jump_to_bootloader)) {
+        return false;
+    }
+
+    if (jump_to_bootloader) {
+        // red for bootloader
+        rgb_matrix_set_color_all(RGB_OFF);
+    } else {
+        // off for soft reset
+        rgb_matrix_set_color_all(RGB_GREEN);
+    }
+    // force flushing -- otherwise will never happen
+    //  rgb_matrix_update_pwm_buffers();
+    return true;
+}
+
+bool shutdown_user(bool jump_to_bootloader) {
+    if (jump_to_bootloader) {
+        // red for bootloader
+        rgb_matrix_set_color_all(RGB_RED);
+    } else {
+        // off for soft reset
+        rgb_matrix_set_color_all(RGB_OFF);
+    }
+    // force flushing -- otherwise will never happen
+    // rgb_matrix_update_pwm_buffers();
+    // false to not process kb level
+    return false;
 }
