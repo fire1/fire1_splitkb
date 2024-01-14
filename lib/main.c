@@ -220,18 +220,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // Handle power states of the keybard
 //
 
+// todo
 void suspend_power_down_user(void) {
-    oled_off();
+    //
+    // LEDs off
     rgb_matrix_set_suspend_state(true);
-    rgb_matrix_set_color_all(RGB_OFF);
-    // rgb_matrix_update_pwm_buffers();
+    rgblight_disable_noeeprom();
+
+    //
+    // OLED stop
+    oled_off();
 }
 
 void suspend_wakeup_init_user(void) {
+    rgblight_enable_noeeprom();
     rgb_matrix_set_suspend_state(false);
     oled_on();
     default_rgb_layer();
-    // rgb_matrix_update_pwm_buffers();
 }
 
 bool shutdown_kb(bool jump_to_bootloader) {
