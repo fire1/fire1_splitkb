@@ -44,11 +44,14 @@ static bool is_layer_eql(uint16_t state) {
 
 void keyboard_post_init_user(void) {
     rgb_matrix_enable();
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_PIXEL_RAIN);
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
+    #if defined(RGBLIGHT_DEFAULT_SPD)
+    rgb_matrix_set_speed_noeeprom(RGBLIGHT_DEFAULT_SPD);
+    #endif
 }
 
 void default_rgb_layer(void) {
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_PIXEL_RAIN);
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
 }
 /**
  * @brief Change RGB color
