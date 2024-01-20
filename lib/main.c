@@ -42,17 +42,18 @@ static bool is_layer_eql(uint16_t state) {
     return false;
 }
 
+void default_rgb_layer(void) {
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
+}
+
 void keyboard_post_init_user(void) {
     rgb_matrix_enable();
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
+    default_rgb_layer();
     #if defined(RGBLIGHT_DEFAULT_SPD)
     rgb_matrix_set_speed_noeeprom(RGBLIGHT_DEFAULT_SPD);
     #endif
 }
 
-void default_rgb_layer(void) {
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
-}
 /**
  * @brief Change RGB color
  *
@@ -101,27 +102,20 @@ void handleLayers(led_t ledUsbState) {
         case L_BASE:
             if (ledUsbState.caps_lock) {
                 oled_write_P(PSTR("CPSLK"), true);
-                //
-                // Capslovk pin
-                change_rgb_layer(HSV_PINK);
             } else {
                 oled_write_P(PSTR("QWRTY"), false);
-                default_rgb_layer();
             }
             break;
 
-        case L_LOWER:
-            change_rgb_layer(HSV_TEAL);
+        /*case L_LOWER:
             break;
         case L_RAISE:
-            change_rgb_layer(HSV_YELLOW);
-            break;
+            break;*/
 
         case L_ADJUST:
         case L_ADJUST_TRI:
         default:
             oled_write_P(PSTR("ADJST"), true);
-            change_rgb_layer(HSV_TURQUOISE);
             break;
     }
 
