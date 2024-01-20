@@ -190,9 +190,48 @@ tap_dance_action_t tap_dance_actions[] = {
 };
 
 //
+// Set color to RGB matrix
+void set_rgb_solid_color(uint16_t h, uint8_t s, uint8_t v) {
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    rgb_matrix_sethsv_noeeprom(h, s, v);
+}
+
+void set_default_rgb_mode(void) {
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
+}
+
+//
+// Set layer colors
+void set_layer_color(uint8_t layer) {
+    switch (layer) {
+        case _QWERTY:
+            if (host_keyboard_led_state().caps_lock) {
+                set_rgb_solid_color(HSV_PINK);
+            } else {
+                set_default_rgb_mode();
+            }
+            break;
+        case _RAISE:
+            set_rgb_solid_color(HSV_ORANGE);
+            break;
+        case _LOWER:
+            set_rgb_solid_color(HSV_PURPLE);
+            break;
+        case _ADJUST:
+            set_rgb_solid_color(HSV_RED);
+            break;
+        default:
+            set_default_rgb_mode();
+            break;
+    }
+}
+
+//
 // Handle layers properly
 layer_state_t layer_state_set_user(layer_state_t state) {
-  return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+    state = update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+    set_layer_color(get_highest_layer(state));
+    return state;
 }
 
 
