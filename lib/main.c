@@ -114,7 +114,6 @@ void handleLayers(led_t ledUsbState) {
 
         case L_ADJUST:
         case L_ADJUST_TRI:
-        default:
             oled_write_P(PSTR("ADJST"), true);
             break;
     }

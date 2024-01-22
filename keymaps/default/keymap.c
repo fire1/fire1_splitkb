@@ -46,7 +46,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESC,    KC_1,    KC_2,   KC_3,    KC_4,     KC_5,                           KC_6,    KC_7,    KC_8,    KC_9,    KC_0,      KC_BSPC,
         KC_TAB,    KC_Q,    KC_W,   KC_E,    KC_R,     KC_T,                           KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_MINS,
 TD(TD_SFT_LAN),    KC_A,    KC_S,   KC_D,    KC_F,     KC_G,                           KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,   MT(MOD_RSFT,  KC_QUOT),
-        KC_LCTL,  KC_Z,    KC_X,   KC_C,    KC_V,     KC_B,  KC_MUTE,           KC_F6, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,   TD(TD_SFT_CPS),
+        KC_LCTL,   KC_Z,    KC_X,   KC_C,    KC_V,     KC_B,  KC_MUTE,           KC_F6, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,   TD(TD_SFT_CPS),
                                 KC_LGUI, KC_LGUI, KC_LALT,MO(_LOWER), KC_SPC,   KC_ENT, MO(_RAISE),  KC_BSPC, KC_LGUI,   MT(MOD_RCTL, KC_APP)
 
 ),
@@ -67,8 +67,8 @@ TD(TD_SFT_LAN),    KC_A,    KC_S,   KC_D,    KC_F,     KC_G,                    
 [_LOWER] = LAYOUT(
     _______,  KC_F1,    KC_F2,   KC_F3,    KC_F4,  KC_F5,                            KC_F6,   KC_F7,     KC_F8,   KC_F9,   KC_F10,  KC_INS,
     _______,  _______,  _______, KC_MS_U, _______, _______,                          KC_CIRC, KC_AMPR,   KC_PAST, KC_PLUS, KC_PIPE,  KC_EQL,
-    _______,  KC_LCTL,  KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_U,                          KC_LEFT, KC_DOWN,   KC_UP,   KC_RGHT, KC_END, KC_F11,
-    _______,  _______,  _______, KC_BTN2, KC_BTN1, KC_WH_D, _______,       _______,  _______,  KC_HOME,  KC_LABK, KC_RABK, KC_BSLS, KC_F12,
+    _______,  KC_LCTL,  KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_U,                          KC_LEFT, KC_DOWN,   KC_UP,   KC_RGHT, KC_END, _______,
+    _______,  _______,  _______, KC_BTN2, KC_BTN1, KC_WH_D, _______,       _______,  _______,  KC_HOME,  KC_LABK, KC_RABK, KC_BSLS, _______,
                                 _______,_______, _______,  _______, _______,        KC_BSPC,  _______, KC_DEL, _______,_______
 ),
 
@@ -200,28 +200,35 @@ void set_default_rgb_mode(void) {
     rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
 }
 
+/*
+bool led_update_user(led_t led_state) {
+    if (led_state.caps_lock) {  //if caps lock is on
+        set_rgb_solid_color(HSV_PINK);
+    }else{
+
+    }
+    return true;
+} */
 //
 // Set layer colors
-void set_layer_color(uint8_t layer) {
+void set_layer_color(uint8_t layer, bool caps) {
     switch (layer) {
+        default:
         case _QWERTY:
-            if (host_keyboard_led_state().caps_lock) {
+            if (caps) {
                 set_rgb_solid_color(HSV_PINK);
             } else {
                 set_default_rgb_mode();
             }
             break;
         case _RAISE:
-            set_rgb_solid_color(HSV_ORANGE);
+            set_rgb_solid_color(HSV_BLUE);
             break;
         case _LOWER:
-            set_rgb_solid_color(HSV_PURPLE);
+            set_rgb_solid_color(HSV_GREEN);
             break;
         case _ADJUST:
-            set_rgb_solid_color(HSV_RED);
-            break;
-        default:
-            set_default_rgb_mode();
+            set_rgb_solid_color(HSV_PURPLE);
             break;
     }
 }
@@ -230,9 +237,10 @@ void set_layer_color(uint8_t layer) {
 // Handle layers properly
 layer_state_t layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
-    set_layer_color(get_highest_layer(state));
+    set_layer_color(get_highest_layer(state),host_keyboard_led_state().caps_lock);
     return state;
 }
+
 
 
 
