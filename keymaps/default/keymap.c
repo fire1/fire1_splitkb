@@ -147,6 +147,45 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
 }
 #endif
 
+#ifdef POINTING_DEVICE_ENABLE
+bool scroll_enabled = false;
+// State
+static int8_t delta_x = 0;
+static int8_t delta_y = 0;
+
+#define SCROLL_TIMEOUT 25
+#define DELTA_X_THRESHOLD 60
+#define DELTA_Y_THRESHOLD 15
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    if (scroll_enabled) {
+        delta_x += mouse_report.x;
+        delta_y += mouse_report.y;
+
+        if (delta_x > DELTA_X_THRESHOLD) {
+            mouse_report.h = 1;
+            delta_x        = 0;
+        } else if (delta_x < -DELTA_X_THRESHOLD) {
+            mouse_report.h = -1;
+            delta_x        = 0;
+        }
+
+        if (delta_y > DELTA_Y_THRESHOLD) {
+            mouse_report.v = -1;
+            delta_y        = 0;
+        } else if (delta_y < -DELTA_Y_THRESHOLD) {
+            mouse_report.v = 1;
+            delta_y        = 0;
+        }
+        mouse_report.x = 0;
+        mouse_report.y = 0;
+    }
+    return mouse_report;
+}
+#endif
+
+
+
+
 //
 // Tap dance setup
 void dance_switch_lan_start (tap_dance_state_t *state, void *user_data) {
@@ -220,11 +259,17 @@ void set_layer_color(uint8_t layer, bool caps) {
             } else {
                 set_default_rgb_mode();
             }
+#ifdef POINTING_DEVICE_ENABLE
+            scroll_enabled = false;
+#endif
             break;
         case _RAISE:
             set_rgb_solid_color(HSV_BLUE);
             break;
         case _LOWER:
+#ifdef POINTING_DEVICE_ENABLE
+            scroll_enabled = true;
+#endif
             set_rgb_solid_color(HSV_GREEN);
             break;
         case _ADJUST:
@@ -240,8 +285,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     set_layer_color(get_highest_layer(state),host_keyboard_led_state().caps_lock);
     return state;
 }
-
-
 
 
 // Suspend RGB matrix
