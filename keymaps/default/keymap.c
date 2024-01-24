@@ -148,6 +148,11 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
 #endif
 
 #ifdef POINTING_DEVICE_ENABLE
+void pointing_device_init_user(void){
+    setPinInputHigh(ANALOG_JOYSTICK_X_AXIS_PIN);
+    setPinInputHigh(ANALOG_JOYSTICK_Y_AXIS_PIN);
+    setPinInputHigh(ANALOG_JOYSTICK_CLICK_PIN);
+}
 bool scroll_enabled = false;
 // State
 static int8_t delta_x = 0;
