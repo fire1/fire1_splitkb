@@ -10,7 +10,7 @@
 #    define OLED_FONT_H "lib/font.c"
 #endif
 
-#define TAPPING_TERM 240
+#define TAPPING_TERM 200
 #define TAPPING_TERM_PER_KEY
 // #define RGBLIGHT_SLEEP
 // #define RGB_DISABLE_WHEN_USB_SUSPENDED
@@ -31,13 +31,13 @@
 // #define NO_PRINT
 #ifdef POINTING_DEVICE_ENABLE
 #    define SPLIT_POINTING_ENABLE // enables transmitting the pointing device status to the master side of the split keyboard
-#    define ANALOG_JOYSTICK_X_AXIS_PIN F4
-#    define ANALOG_JOYSTICK_Y_AXIS_PIN B6
+#    define ANALOG_JOYSTICK_X_AXIS_PIN B6
+#    define ANALOG_JOYSTICK_Y_AXIS_PIN F4
 #    define ANALOG_JOYSTICK_CLICK_PIN B2
-#    define ANALOG_JOYSTICK_AXIS_MIN 260
-#    define ANALOG_JOYSTICK_AXIS_MAX 820
-#    define ANALOG_JOYSTICK_SPEED_REGULATOR 18
-#    define ANALOG_JOYSTICK_READ_INTERVAL 10
+#    define ANALOG_JOYSTICK_AXIS_MIN 255
+#    define ANALOG_JOYSTICK_AXIS_MAX 1000
+#    define ANALOG_JOYSTICK_SPEED_REGULATOR 17
+#    define ANALOG_JOYSTICK_READ_INTERVAL 3
 #    define POINTING_DEVICE_RIGHT
 #    define POINTING_DEVICE_INVERT_X
 #    define POINTING_DEVICE_INVERT_Y

@@ -135,7 +135,9 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
         } else {
             tap_code(KC_VOLU);
         }
-    } else if (index == 1) {
+    }
+    #ifndef POINTING_DEVICE_ENABLE
+     else if (index == 1) {
         // Page up/Page down
         if (clockwise) {
             tap_code(KC_PGDN);
@@ -143,48 +145,8 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
             tap_code(KC_PGUP);
         }
     }
+    #endif
     return true;
-}
-#endif
-
-#ifdef POINTING_DEVICE_ENABLE
-void pointing_device_init_user(void){
-    setPinInputHigh(ANALOG_JOYSTICK_X_AXIS_PIN);
-    setPinInputHigh(ANALOG_JOYSTICK_Y_AXIS_PIN);
-    setPinInputHigh(ANALOG_JOYSTICK_CLICK_PIN);
-}
-bool scroll_enabled = false;
-// State
-static int8_t delta_x = 0;
-static int8_t delta_y = 0;
-
-#define SCROLL_TIMEOUT 25
-#define DELTA_X_THRESHOLD 60
-#define DELTA_Y_THRESHOLD 15
-report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    if (scroll_enabled) {
-        delta_x += mouse_report.x;
-        delta_y += mouse_report.y;
-
-        if (delta_x > DELTA_X_THRESHOLD) {
-            mouse_report.h = 1;
-            delta_x        = 0;
-        } else if (delta_x < -DELTA_X_THRESHOLD) {
-            mouse_report.h = -1;
-            delta_x        = 0;
-        }
-
-        if (delta_y > DELTA_Y_THRESHOLD) {
-            mouse_report.v = -1;
-            delta_y        = 0;
-        } else if (delta_y < -DELTA_Y_THRESHOLD) {
-            mouse_report.v = 1;
-            delta_y        = 0;
-        }
-        mouse_report.x = 0;
-        mouse_report.y = 0;
-    }
-    return mouse_report;
 }
 #endif
 
@@ -244,17 +206,11 @@ void set_default_rgb_mode(void) {
     rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
 }
 
-/*
-bool led_update_user(led_t led_state) {
-    if (led_state.caps_lock) {  //if caps lock is on
-        set_rgb_solid_color(HSV_PINK);
-    }else{
+#ifdef POINTING_DEVICE_ENABLE
+bool pointer_scroll_enabled = false;
+#endif
 
-    }
-    return true;
-} */
-//
-// Set layer colors
+
 void set_layer_color(uint8_t layer, bool caps) {
     switch (layer) {
         default:
@@ -265,7 +221,7 @@ void set_layer_color(uint8_t layer, bool caps) {
                 set_default_rgb_mode();
             }
 #ifdef POINTING_DEVICE_ENABLE
-            scroll_enabled = false;
+            pointer_scroll_enabled = false;
 #endif
             break;
         case _RAISE:
@@ -273,7 +229,7 @@ void set_layer_color(uint8_t layer, bool caps) {
             break;
         case _LOWER:
 #ifdef POINTING_DEVICE_ENABLE
-            scroll_enabled = true;
+            pointer_scroll_enabled = true;
 #endif
             set_rgb_solid_color(HSV_GREEN);
             break;
@@ -304,5 +260,9 @@ void suspend_wakeup_init_kb(void)
     rgb_matrix_set_suspend_state(false);
 }
 */
+#ifdef POINTING_DEVICE_ENABLE
+    #include "lib/mice.c"
+#endif
+
 #include "lib/main.c"
 

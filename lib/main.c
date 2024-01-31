@@ -47,6 +47,7 @@ void default_rgb_layer(void) {
 }
 
 void keyboard_post_init_user(void) {
+    debug_enable=true;
     rgb_matrix_enable();
     default_rgb_layer();
     #if defined(RGBLIGHT_DEFAULT_SPD)
