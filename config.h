@@ -31,8 +31,8 @@
 // #define NO_PRINT
 #ifdef POINTING_DEVICE_ENABLE
 #    define SPLIT_POINTING_ENABLE // enables transmitting the pointing device status to the master side of the split keyboard
-#    define ANALOG_JOYSTICK_X_AXIS_PIN B6
-#    define ANALOG_JOYSTICK_Y_AXIS_PIN F4
+#    define ANALOG_JOYSTICK_X_AXIS_PIN F4
+#    define ANALOG_JOYSTICK_Y_AXIS_PIN B6
 #    define ANALOG_JOYSTICK_CLICK_PIN B2
 #    define ANALOG_JOYSTICK_AXIS_MIN 220
 #    define ANALOG_JOYSTICK_AXIS_MAX 900
@@ -40,6 +40,6 @@
 #    define ANALOG_JOYSTICK_READ_INTERVAL 2
 #    define POINTING_DEVICE_RIGHT
 #    define POINTING_DEVICE_INVERT_X
-#    define POINTING_DEVICE_INVERT_Y
+//#    define POINTING_DEVICE_INVERT_Y
 #    define ANALOG_JOYSTICK_SPEED_MAX 2
 #endif
