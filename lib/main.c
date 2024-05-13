@@ -47,12 +47,12 @@ void default_rgb_layer(void) {
 }
 
 void keyboard_post_init_user(void) {
-    debug_enable=true;
+    debug_enable = true;
     rgb_matrix_enable();
     default_rgb_layer();
-    #if defined(RGBLIGHT_DEFAULT_SPD)
+#if defined(RGBLIGHT_DEFAULT_SPD)
     rgb_matrix_set_speed_noeeprom(RGBLIGHT_DEFAULT_SPD);
-    #endif
+#endif
 }
 
 /**
@@ -108,10 +108,10 @@ void handleLayers(led_t ledUsbState) {
             }
             break;
 
-        /*case L_LOWER:
-            break;
-        case L_RAISE:
-            break;*/
+            /*case L_LOWER:
+                break;
+            case L_RAISE:
+                break;*/
 
         case L_ADJUST:
         case L_ADJUST_TRI:
@@ -243,9 +243,11 @@ bool shutdown_kb(bool jump_to_bootloader) {
 
     if (jump_to_bootloader) {
         // red for bootloader
+        oled_off();
         rgb_matrix_set_color_all(RGB_OFF);
     } else {
         // off for soft reset
+        oled_on();
         rgb_matrix_set_color_all(RGB_GREEN);
     }
     // force flushing -- otherwise will never happen
@@ -256,9 +258,11 @@ bool shutdown_kb(bool jump_to_bootloader) {
 bool shutdown_user(bool jump_to_bootloader) {
     if (jump_to_bootloader) {
         // red for bootloader
+        oled_on();
         rgb_matrix_set_color_all(RGB_RED);
     } else {
         // off for soft reset
+        oled_off();
         rgb_matrix_set_color_all(RGB_OFF);
     }
     // force flushing -- otherwise will never happen
