@@ -1,10 +1,9 @@
 # Splitkb Aurora Sofle v2
 [https://splitkb.com/] 
 
-*A moded keyboard firmware for Splitkb's Aurora Sofle v2 with MCU ATmega32u4.*
-The right side of the keyboard  moded in order to support a joystick. 
-Since this mode is kind of useless I wont share the scheme and how to make it.
-(Do not waste your time!)
+A moded keyboard firmware for Splitkb's Aurora Sofle v2 with MCU ATmega32u4. 
+The right side of the keyboard is moded in order to support a joystick.
+Since this mode is kind of useless I won't share the scheme and how to make it.
 
 
 * Keyboard Maintainer: [Angel Zaprianov](https://github.com/fire1)
