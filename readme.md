@@ -3,7 +3,7 @@
 
 A moded keyboard firmware for Splitkb's Aurora Sofle v2 with MCU ATmega32u4. 
 The right side of the keyboard is moded in order to support a joystick.
-Since this mode is kind of useless I won't share the scheme and how to make it.
+Since this mod is kind of useless I won't share the scheme and how to make it.
 
 
 * Keyboard Maintainer: [Angel Zaprianov](https://github.com/fire1)
