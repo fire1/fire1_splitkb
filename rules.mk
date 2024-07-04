@@ -3,6 +3,16 @@ TAP_DANCE_ENABLE = yes # Allow tab dance
 # Other dependency are defined in info.json
 LTO_ENABLE = yes  # Makes hex file smaller
 
+
+
+# Disable debug (lower hex size)
+CONSOLE_ENABLE = no
+COMMAND_ENABLE = no
+
+# Optimize for size
+OPT_DEFS += -Os
+
+
 RGB_DISABLE_WHEN_USB_SUSPENDED=true
 #NO_USB_STARTUP_CHECK=true
 
