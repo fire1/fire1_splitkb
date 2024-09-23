@@ -67,13 +67,16 @@ void change_rgb_layer(uint8_t h, uint8_t s, uint8_t v) {
     rgb_matrix_sethsv_noeeprom(h, s, v);
 }
 //
-// Suspend RGB feature
+// Suspend handler
 void suspend_power_down_kb(void) {
     rgb_matrix_set_suspend_state(true);
+    oled_off();
 }
 
 void suspend_wakeup_init_kb(void) {
     rgb_matrix_set_suspend_state(false);
+    oled_on();
+
 }
 
 void drawBoot(void) {
