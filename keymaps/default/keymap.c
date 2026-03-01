@@ -7,7 +7,8 @@ enum layer_number {
   _QWERTY = 0,
   _LOWER,
   _RAISE,
-  _ADJUST
+  _ADJUST,
+  _NUM_LR  // Toggle adjust layer
 };
 
 enum custom_keycodes {
@@ -43,11 +44,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 //   TD(TD_ESC_GRV) HD_SFT_LAN
  [_QWERTY] = LAYOUT(
-        KC_ESC,    KC_1,    KC_2,   KC_3,    KC_4,     KC_5,                           KC_6,    KC_7,    KC_8,    KC_9,    KC_0,      KC_BSPC,
+        KC_ESC,    KC_1,    KC_2,   KC_3,    KC_4,     KC_5,                           KC_6,    KC_7,    KC_8,    KC_9,    KC_0,      KC_DEL,
         KC_TAB,    KC_Q,    KC_W,   KC_E,    KC_R,     KC_T,                           KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_MINS,
 TD(TD_SFT_LAN),    KC_A,    KC_S,   KC_D,    KC_F,     KC_G,                           KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,   MT(MOD_RSFT,  KC_QUOT),
         KC_LCTL,   KC_Z,    KC_X,   KC_C,    KC_V,     KC_B,  KC_MUTE,           KC_F6, KC_N,   KC_M,    KC_COMM, KC_DOT,  KC_SLSH,   TD(TD_CTL_CPS),
-                            KC_LGUI, KC_LGUI, KC_LALT,MO(_LOWER), KC_SPC,        KC_ENT,MO(_RAISE),      KC_BSPC, KC_RCTL, MT(MOD_RCTL, KC_APP)
+            TT(_NUM_LR), KC_LGUI,  KC_LALT,  MO(_LOWER),      KC_SPC,           KC_ENT,   MO(_RAISE),   KC_RALT, KC_RCTL, MT(MOD_RCTL, KC_APP)
 
 ),
 /* LOWER
@@ -112,9 +113,17 @@ TD(TD_TAB_TCL),KC_GRV,KC_AT, KC_HASH,    KC_DLR,  KC_PERC,                      
  */
   [_ADJUST] = LAYOUT(
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_SLEP,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_DEL, XXXXXXX,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,   KC_DEL,  XXXXXXX,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX,
   XXXXXXX, XXXXXXX, XXXXXXX, RGB_M_SW,RGB_M_X, RGB_M_B, XXXXXXX,     XXXXXXX, XXXXXXX, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX, XXXXXXX,
+                    _______, _______, _______, _______, _______,     _______,  _______, _______, _______, _______
+  ),
+
+  [_NUM_LR] = LAYOUT(
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  XXXXXXX,   KC_F1,  KC_F2,   KC_F3,   KC_F4, KC_F5,                         KC_F6,    KC_F7,   KC_F8,    KC_F9,  KC_F10, XXXXXXX,
+  XXXXXXX,    KC_1,   KC_2,   KC_3,    KC_4, KC_5,                           KC_6,     KC_7,    KC_8,     KC_9,   KC_0,  XXXXXXX,
+  XXXXXXX, KC_F11, KC_F12, KC_PLUS, KC_ASTR, RGB_M_B, XXXXXXX,     XXXXXXX, KC_MINS, KC_SLSH, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                     _______, _______, _______, _______, _______,     _______,  _______, _______, _______, _______
   ),
 
@@ -236,6 +245,9 @@ void set_layer_color(uint8_t layer, bool caps) {
         case _ADJUST:
             set_rgb_solid_color(HSV_PURPLE);
             break;
+            case _NUM_LR:
+                set_rgb_solid_color(HSV_PURPLE);
+                break;
     }
 }
 
@@ -248,7 +260,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 
-// Suspend RGB matrix
+// Suspend RGB matrix''
 /*
 void suspend_power_down_kb(void)
 {
@@ -265,4 +277,3 @@ void suspend_wakeup_init_kb(void)
 #endif
 
 #include "lib/main.c"
-
