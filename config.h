@@ -44,4 +44,3 @@
 //#    define POINTING_DEVICE_INVERT_Y
 #    define ANALOG_JOYSTICK_SPEED_MAX 2
 #endif
-

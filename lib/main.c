@@ -116,6 +116,11 @@ void handleLayers(led_t ledUsbState) {
             case L_RAISE:
                 break;*/
 
+            /* Too big, no size for the firmware    
+        case _NUM_LR:
+            oled_write_P(PSTR("FUNUM"), true);
+            break;
+ */
         case L_ADJUST:
         case L_ADJUST_TRI:
             oled_write_P(PSTR("ADJST"), true);
