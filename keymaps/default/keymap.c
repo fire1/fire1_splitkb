@@ -17,7 +17,7 @@ enum custom_keycodes {
   LSFT_LNG = SAFE_RANGE, // SAFE_RANGE is critical to avoid F-keys
   ALT_TAB,               // Left Alt + Alt-Tab
   RALT_TAB,              // Right Alt + Ctrl-Tab
-
+  CTL_SFT,
   // not used in main.c
   CTL_TGL                // Control + Layer Toggle
 };
@@ -74,8 +74,8 @@ LSFT_T(LSFT_LNG),  KC_A,    KC_S,   KC_D,    KC_F,     KC_G,                    
 [_LOWER] = LAYOUT(
     _______,  KC_F1,    KC_F2,   KC_F3,    KC_F4,  KC_F5,                            KC_F6,   KC_F7,     KC_F8,   KC_F9,   KC_F10,  KC_INS,
     _______,  KC_ESC,  _______, KC_MS_U, _______, _______,                          KC_CIRC, KC_AMPR,   KC_PAST, KC_PLUS, KC_BSPC, KC_EQL,
-    _______,  KC_LCTL,  KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_U,                          KC_LEFT, KC_DOWN,   KC_UP,   KC_RGHT, KC_END, 	_______,
-    _______,  KC_LALT,  _______, KC_BTN2, KC_BTN1, KC_WH_D, _______,       _______,  _______,  KC_HOME,  KC_LABK, KC_RABK, KC_BSLS, _______,
+    _______,  CTL_SFT,  KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_U,                          KC_LEFT, KC_DOWN,   KC_UP,   KC_RGHT, KC_END, 	_______,
+    _______,  KC_LALT,  CTL_SFT, KC_BTN2, KC_BTN1, KC_WH_D, _______,       _______,  _______,  KC_HOME,  KC_LABK, KC_RABK, KC_BSLS, _______,
                                 _______,_______, _______,  _______, _______,        KC_BSPC,  _______, KC_DEL, _______,_______
 ),
 
