@@ -11,18 +11,24 @@ enum layer_number {
   _NUM_LR  // Toggle adjust layer
 };
 
+//
+// Replacment of tapdance
 enum custom_keycodes {
-    CHANGE_LAN=SAFE_RANGE
+  LSFT_LNG = SAFE_RANGE, // SAFE_RANGE is critical to avoid F-keys
+  ALT_TAB,               // Left Alt + Alt-Tab
+  RALT_TAB,              // Right Alt + Ctrl-Tab
+
+  // not used in main.c
+  CTL_TGL                // Control + Layer Toggle
 };
 // TapDance
+/*
 enum {
     TD_CTL_CPS=0,// Right shift & caps lock
     TD_SFT_LAN,
     TD_TAB_TCL
 };
-
-
-
+*/
 
 
 // Keymaps
@@ -46,9 +52,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  [_QWERTY] = LAYOUT(
         KC_ESC,    KC_1,    KC_2,   KC_3,    KC_4,     KC_5,                           KC_6,    KC_7,    KC_8,    KC_9,    KC_0,      KC_DEL,
         KC_TAB,    KC_Q,    KC_W,   KC_E,    KC_R,     KC_T,                           KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_MINS,
-TD(TD_SFT_LAN),    KC_A,    KC_S,   KC_D,    KC_F,     KC_G,                           KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,   MT(MOD_RSFT,  KC_QUOT),
-        KC_LCTL,   KC_Z,    KC_X,   KC_C,    KC_V,     KC_B,  KC_MUTE,           KC_F6, KC_N,   KC_M,    KC_COMM, KC_DOT,  KC_SLSH,   TD(TD_CTL_CPS),
-            TT(_NUM_LR), KC_LGUI,  KC_LALT,  MO(_LOWER),      KC_SPC,           KC_ENT,   MO(_RAISE),   KC_RALT, KC_RCTL, MT(MOD_RCTL, KC_APP)
+LSFT_T(LSFT_LNG),  KC_A,    KC_S,   KC_D,    KC_F,     KC_G,                           KC_H,    KC_J,    KC_K,    KC_L,  KC_SCLN,   MT(MOD_RSFT,  KC_QUOT),
+        KC_LCTL,   KC_Z,    KC_X,   KC_C,    KC_V,     KC_B,  KC_MUTE,           KC_F6, KC_N,   KC_M,    KC_COMM, KC_DOT,  KC_SLSH,   MT(MOD_LCTL, KC_CAPS),
+            TT(_NUM_LR), KC_LGUI,  LALT_T(ALT_TAB),  MO(_LOWER),      KC_SPC,           KC_ENT,   MO(_RAISE),RALT_T(RALT_TAB), KC_RCTL, MT(MOD_RCTL, KC_APP)
 
 ),
 /* LOWER
@@ -92,7 +98,7 @@ TD(TD_SFT_LAN),    KC_A,    KC_S,   KC_D,    KC_F,     KC_G,                    
 //  KC_DQT
 [_RAISE] = LAYOUT(
   KC_ESC,    KC_F1,    KC_F2,   KC_F3,   KC_F4,   KC_F5,                         KC_F6,    KC_F7,     KC_F8,     KC_F9,    KC_F10,   KC_DEL,
-TD(TD_TAB_TCL),KC_GRV,KC_AT, KC_HASH,    KC_DLR,  KC_PERC,                       KC_CIRC,  KC_AMPR,   KC_ASTR,   KC_EXLM,  KC_QUES,  _______,
+ KC_TAB, KC_GRV,KC_AT, KC_HASH,    KC_DLR,  KC_PERC,                            KC_CIRC,  KC_AMPR,   KC_ASTR,   KC_EXLM,  KC_QUES,  _______,
   _______,   KC_LPRN,  KC_RPRN, KC_LCBR, KC_RCBR, KC_TILD,                       KC_5,     KC_6,      KC_7,      KC_8,     KC_9,     _______,
   _______,   KC_EXLM , KC_UNDS, KC_LBRC, KC_RBRC, _______, KC_PGUP,   KC_PGDN,   KC_0,     KC_1,      KC_2,      KC_3,     KC_4,     _______,
                     _______, _______,  _______,  _______,  KC_DEL,    _______,  _______,  _______, _______, _______
@@ -161,7 +167,7 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
 
 
 
-
+/*
 //
 // Tap dance setup
 void dance_switch_lan_start (tap_dance_state_t *state, void *user_data) {
@@ -191,18 +197,19 @@ void dance_switch_tab_start (tap_dance_state_t *state, void *user_data) {
 }
 
 void dance_switch_tab_finish (tap_dance_state_t *state, void *user_data) {
-
     unregister_code(KC_LCTL);
     unregister_code(KC_TAB);
 
 }
-//
+// deprecated
 // Tab dance colection
 tap_dance_action_t tap_dance_actions[] = {
     [TD_CTL_CPS]  = ACTION_TAP_DANCE_DOUBLE(KC_RCTL, KC_CAPS),
     [TD_SFT_LAN]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL,dance_switch_lan_start, dance_switch_lan_finish),
     [TD_TAB_TCL]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL,dance_switch_tab_start, dance_switch_tab_finish),
 };
+*/
+
 
 //
 // Set color to RGB matrix

@@ -116,7 +116,7 @@ void handleLayers(led_t ledUsbState) {
             case L_RAISE:
                 break;*/
 
-            /* Too big, no size for the firmware    
+            /* Too big, no size for the firmware
         case _NUM_LR:
             oled_write_P(PSTR("FUNUM"), true);
             break;
@@ -203,24 +203,85 @@ void setScreenKeys(uint16_t keycode, keyrecord_t *record) {
 
 /**
  * @brief OLED keyboard animation of the keypresses
- *
+ *      Replacment of tabdance
  * @param keycode
  * @param record
  * @return true
  * @return false
  */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // Your existing OLED and Screen logic
     setScreenKeys(keycode, record);
     setOledKeymap(keycode, record);
-    //
-    // Reset keymap animation pressesd
+
     if (keypressIndex > 5) resetKeymap();
     if (isInitDrawRun) privateTimer = timer_read();
-
     keypressIndex++;
-    return true; // We didn't handle other keypresses
-}
 
+    // --- CUSTOM LOGIC ---
+    switch (keycode) {
+        case LSFT_LNG:
+        case LSFT_T(LSFT_LNG):
+            if (record->event.pressed) {
+                // Handle the HOLD (Shift) manually to ensure no F7 is sent on press
+                if (record->tap.count == 0) {
+                    register_mods(MOD_BIT(KC_LSFT));
+                }
+            } else {
+                unregister_mods(MOD_BIT(KC_LSFT)); // Always unregister on release
+                if (record->tap.count > 0) {
+                    // Logic for Language Change (TAP)
+                    clear_mods();
+                    register_code(KC_LGUI);
+                    tap_code(KC_SPC);
+                    unregister_code(KC_LGUI);
+                }
+            }
+            return false;
+
+            case ALT_TAB:
+            case LALT_T(ALT_TAB):
+                if (record->event.pressed) {
+                    // Handle the HOLD (Alt) manually
+                    register_mods(MOD_BIT(KC_LALT));
+                } else {
+                    // On Release:
+                    // 1. Unregister Alt first so it doesn't "stick"
+                    unregister_mods(MOD_BIT(KC_LALT));
+
+                    // 2. If it was a quick tap, send Alt+Tab
+                    if (record->tap.count > 0) {
+                        tap_code16(LALT(KC_TAB));
+                    }
+                }
+            return false; // Blocks any default junk keycode on press
+
+            case RALT_TAB:
+            case RALT_T(RALT_TAB):
+                if (record->event.pressed) {
+                    register_mods(MOD_BIT(KC_RALT));
+                } else {
+                    unregister_mods(MOD_BIT(KC_RALT));
+                    if (record->tap.count > 0) {
+                        tap_code16(LCTL(KC_TAB));
+                    }
+                }
+                return false;
+
+            case CTL_TGL:
+            case LCTL_T(CTL_TGL):
+                if (record->event.pressed) {
+                    register_code(KC_LCTL);
+                } else {
+                    unregister_code(KC_LCTL);
+                    if (record->tap.count > 0) {
+                        layer_invert(_ADJUST);
+                    }
+                }
+                return false;
+    }
+    return true;
+}
 //
 // Handle power states of the keybard
 //
