@@ -16,7 +16,7 @@ enum layer_number {
 enum custom_keycodes {
   LSFT_LNG = SAFE_RANGE, // SAFE_RANGE is critical to avoid F-keys
   ALT_TAB,               // Left Alt + Alt-Tab
-  RALT_TAB,              // Right Alt + Ctrl-Tab
+  RCTL_TAB,              // Right Ctl + Ctrl-Tab
   CTL_SFT,
   // not used in main.c
   CTL_TGL                // Control + Layer Toggle
@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,    KC_Q,    KC_W,   KC_E,    KC_R,     KC_T,                           KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_MINS,
 LSFT_T(LSFT_LNG),  KC_A,    KC_S,   KC_D,    KC_F,     KC_G,                           KC_H,    KC_J,    KC_K,    KC_L,  KC_SCLN,   MT(MOD_RSFT,  KC_QUOT),
         KC_LCTL,   KC_Z,    KC_X,   KC_C,    KC_V,     KC_B,  KC_MUTE,           KC_F6, KC_N,   KC_M,    KC_COMM, KC_DOT,  KC_SLSH,   MT(MOD_LCTL, KC_CAPS),
-            TT(_NUM_LR), KC_LGUI,  LALT_T(ALT_TAB),  MO(_LOWER),      KC_SPC,           KC_ENT,   MO(_RAISE),RALT_T(RALT_TAB), KC_RCTL, MT(MOD_RCTL, KC_APP)
+            TT(_NUM_LR), KC_LGUI,  LALT_T(ALT_TAB),  MO(_LOWER),      KC_SPC,           KC_ENT,   MO(_RAISE), RCTL_T(RCTL_TAB), KC_RALT, MT(MOD_RCTL, KC_APP)
 
 ),
 /* LOWER

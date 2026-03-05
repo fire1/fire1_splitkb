@@ -241,30 +241,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
             case ALT_TAB:
             case LALT_T(ALT_TAB):
-                if (record->event.pressed) {
-                    // Handle the HOLD (Alt) manually
+            if (record->event.pressed) {
+                    // 1. Първо натискаме и държим ALT
                     register_mods(MOD_BIT(KC_LALT));
-                } else {
-                    // On Release:
-                    // 1. Unregister Alt first so it doesn't "stick"
-                    unregister_mods(MOD_BIT(KC_LALT));
 
-                    // 2. If it was a quick tap, send Alt+Tab
+                    // 2. Ако е "тап" (бързо натискане), веднага чукаме TAB
+                    // Това отваря менюто в Windows/Linux/Mac
                     if (record->tap.count > 0) {
-                        tap_code16(LALT(KC_TAB));
+                        tap_code(KC_TAB);
                     }
+                } else {
+                    // 3. Когато пуснеш физическия клавиш, чак тогава пускаме ALT
+                    unregister_mods(MOD_BIT(KC_LALT));
                 }
             return false; // Blocks any default junk keycode on press
 
-            case RALT_TAB:
-            case RALT_T(RALT_TAB):
+            case RCTL_TAB:
+            case RCTL_T(RCTL_TAB):
                 if (record->event.pressed) {
-                    register_mods(MOD_BIT(KC_RALT));
-                } else {
-                    unregister_mods(MOD_BIT(KC_RALT));
+                    // 1. Натискаме и държим Right Ctrl веднага
+                    register_mods(MOD_BIT(KC_RCTL));
+
+                    // 2. Ако е "тап", пращаме Ctrl+Tab за превключване на таб
                     if (record->tap.count > 0) {
-                        tap_code16(LCTL(KC_TAB));
+                        tap_code(KC_TAB);
                     }
+                } else {
+                    // 3. Пускаме Ctrl едва когато пуснеш физическия бутон
+                    unregister_mods(MOD_BIT(KC_RCTL));
                 }
                 return false;
 
