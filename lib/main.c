@@ -76,7 +76,6 @@ void suspend_power_down_kb(void) {
 void suspend_wakeup_init_kb(void) {
     rgb_matrix_set_suspend_state(false);
     oled_on();
-
 }
 
 void drawBoot(void) {
@@ -239,57 +238,59 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-
-            case RCTL_TAB:
-            case RCTL_T(RCTL_TAB):
+        case RCTL_TAB:
+        case RCTL_T(RCTL_TAB):
             if (record->event.pressed) {
-
-                    register_mods(MOD_BIT( KC_RCTL));
-
-                    if (record->tap.count > 0) {
-                        tap_code(KC_TAB);
-                    }
+                if (record->tap.count > 0) {
+                    // TAP → Alt+Tab (moved from left key)
+                    register_code(KC_LALT);
+                    tap_code(KC_TAB);
+                    unregister_code(KC_LALT);
                 } else {
-
-                    unregister_mods(MOD_BIT(KC_RCTL));
+                    // HOLD → Right Ctrl (unchanged)
+                    register_mods(MOD_BIT(KC_RCTL));
                 }
+            } else {
+                unregister_mods(MOD_BIT(KC_RCTL));
+            }
             return false;
 
-            case ALT_TAB:
-            case LALT_T(ALT_TAB):
-                if (record->event.pressed) {
-
-                    register_mods(MOD_BIT(KC_LALT));
-
-                    if (record->tap.count > 0) {
-                        tap_code(KC_TAB);
-                    }
-                } else {
-
-                    unregister_mods(MOD_BIT(KC_LALT));
-                }
-                return false;
-
-            case CTL_TGL:
-            case LCTL_T(CTL_TGL):
-                if (record->event.pressed) {
+        case ALT_TAB:
+        case LALT_T(ALT_TAB):
+            if (record->event.pressed) {
+                if (record->tap.count > 0) {
+                    // TAP → Ctrl+Tab (moved from right key)
                     register_code(KC_LCTL);
-                } else {
+                    tap_code(KC_TAB);
                     unregister_code(KC_LCTL);
-                    if (record->tap.count > 0) {
-                        layer_invert(_ADJUST);
-                    }
+                } else {
+                    // HOLD → Left Alt (unchanged)
+                    register_mods(MOD_BIT(KC_LALT));
                 }
-                return false;
-                //
-                // Holding ctr+shift
-                case CTL_SFT:
-                    if (record->event.pressed) {
-                        register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
-                    } else {
-                        unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
-                    }
-                    return false;
+            } else {
+                unregister_mods(MOD_BIT(KC_LALT));
+            }
+            return false;
+        case CTL_TGL:
+        case LCTL_T(CTL_TGL):
+            if (record->event.pressed) {
+                register_code(KC_LCTL);
+            } else {
+                unregister_code(KC_LCTL);
+                if (record->tap.count > 0) {
+                    layer_invert(_ADJUST);
+                }
+            }
+            return false;
+        //
+        // Holding ctr+shift
+        case CTL_SFT:
+            if (record->event.pressed) {
+                register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
+            } else {
+                unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
+            }
+            return false;
     }
     return true;
 }
