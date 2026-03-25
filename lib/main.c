@@ -219,6 +219,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     // --- CUSTOM LOGIC ---
     switch (keycode) {
+
+
         case LSFT_LNG:
         case LSFT_T(LSFT_LNG):
             if (record->event.pressed) {
@@ -284,9 +286,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         //
         // Holding ctr+shift
+        // case CTL_SFT:
+        //     if (record->event.pressed) {
+        //         register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
+        //     } else {
+        //         unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
+        //     }
+        //     return false;
+        //
+        // Ctrl hold and Ctrl+Shift+Tap hold state
         case CTL_SFT:
+        case MT(MOD_LCTL, CTL_SFT):
             if (record->event.pressed) {
-                register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
+                if (record->tap.count > 0) {
+                    // tap → hold: Ctrl+Shift
+                    register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
+                } else {
+                    // plain hold: Ctrl only
+                    register_mods(MOD_BIT(KC_LCTL));
+                }
             } else {
                 unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
             }
