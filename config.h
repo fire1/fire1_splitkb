@@ -10,7 +10,7 @@
 #    define OLED_FONT_H "lib/font.c"
 #endif
 
-#define TAPPING_TERM 200
+#define TAPPING_TERM 150
 #define TAPPING_TERM_PER_KEY
 // #define RGBLIGHT_SLEEP
 // #define RGB_DISABLE_WHEN_USB_SUSPENDED
