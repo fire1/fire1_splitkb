@@ -1,4 +1,9 @@
-# Splitkb Aurora Sofle v2
+
+# Archived
+Moved to bulk repo:
+[https://github.com/fire1/qmk-keyboards]
+
+### Splitkb Aurora Sofle v2
 [https://splitkb.com/] 
 
 A moded keyboard firmware for Splitkb's Aurora Sofle v2 with MCU ATmega32u4. 
